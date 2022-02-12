@@ -50,7 +50,7 @@ class MetadataBase(object):
             fp.write(data.encode('utf-8'))
             fp.flush()
             self._meta = GExiv2.Metadata()
-            assert self._meta.open_path(fp.name)
+            self._meta.open_path(fp.name)
         finally:
             fp.close()
 
