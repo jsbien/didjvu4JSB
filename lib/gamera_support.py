@@ -52,6 +52,7 @@ from gamera.plugins.pil_io import from_pil as _from_pil
 import gamera.args
 
 def has_version(*req_version):
+    # TODO: Enable if final Gamera release is available.
     return True  # tuple(map(int, version.split('.'))) >= req_version
 
 def load_image(filename):
@@ -211,8 +212,8 @@ def to_pil_1bpp(image):
     return image.to_pil()
 
 def init():
-    if not has_version(3, 4):
-        raise RuntimeError('Gamera >= 3.4 is required')
+    if not has_version(4, 0):
+        raise RuntimeError('Gamera >= 4.0 is required')
     sys.modules['numpy'] = None
     result = _init()
     test_image = Image((0, 0), (5, 5), RGB)

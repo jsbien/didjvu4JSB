@@ -232,11 +232,20 @@ class test_argument_parser():
             with assert_raises(SystemExit) as ecm:
                 ap.parse_args({})
             assert_equal(ecm.exception.args, (2,))
-        assert_multi_line_equal(
-            stderr.getvalue(),
-            'usage: didjvu [-h] [--version] {{{actions}}} ...\n'.format(actions=','.join(self.anames)) +
-            "didjvu: error: invalid choice: 'eggs' (choose from {actions})\n".format(actions=', '.join(map(repr, self.anames)))
-        )
+        action_values = ','.join(self.anames)
+        action_strings = ', '.join(map(repr, self.anames))
+        if sys.version_info < (3, 9):
+            assert_multi_line_equal(
+                stderr.getvalue(),
+                f'usage: didjvu [-h] [--version] {{{action_values}}} ...\n' +
+                f"didjvu: error: invalid choice: 'eggs' (choose from {action_strings})\n"
+            )
+        else:
+            assert_multi_line_equal(
+                stderr.getvalue(),
+                f'usage: didjvu [-h] [--version] {{{action_values}}} ...\n' +
+                f"didjvu: error: argument {{{action_values}}}: invalid choice: 'eggs' (choose from {action_strings})\n"
+            )
 
     def _test_action(self, action, *args):
         stderr = io.StringIO()

@@ -46,10 +46,12 @@ class Crcb(object):
         self._sort_key = sort_key
         self._name = name
 
-    def __cmp__(self, other):
-        if not isinstance(other, Crcb):
-            return NotImplemented
-        return cmp(self._sort_key, other._sort_key)
+    # Not supported in Python 3, but does not seem to be used/required at all.
+    # Migration guide: https://stackoverflow.com/questions/8276983/
+    #def __cmp__(self, other):
+        #if not isinstance(other, Crcb):
+            #return NotImplemented
+        #return cmp(self._sort_key, other._sort_key)
 
     def __str__(self):
         return self._name
