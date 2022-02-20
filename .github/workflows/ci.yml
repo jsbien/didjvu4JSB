@@ -10,15 +10,15 @@ jobs:
         - os: ubuntu-latest
           python: 3.8
           cc: gcc
-          gamera: master
+          gamera: v4.0.0
         - os: ubuntu-latest
           python: 3.9
           cc: gcc
-          gamera: master
+          gamera: v4.0.0
         - os: ubuntu-latest
           python: '3.10'
           cc: gcc
-          gamera: master
+          gamera: v4.0.0
     runs-on: ${{ matrix.os }}
     name: Python ${{ matrix.python }} with Gamera ${{ matrix.gamera }}
     steps:
@@ -67,9 +67,9 @@ jobs:
       with:
         path: ~/.ccache
         key:
-          ccache-${{ matrix.os }}-${{ env.cc }}-${{ matrix.gamera }}
+          ccache-${{ matrix.os }}-${{ env.cc }}-${{ matrix.gamera }}-py${{ matrix.python }}
         restore-keys:
-          ccache-${{ matrix.os }}-${{ env.cc }}-${{ matrix.gamera }}
+          ccache-${{ matrix.os }}-${{ env.cc }}-${{ matrix.gamera }}-py${{ matrix.python }}
       if: ${{ matrix.gamera != 'master' }}
     - name: download Gamera
       run: |

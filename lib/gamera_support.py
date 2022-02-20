@@ -52,8 +52,7 @@ from gamera.plugins.pil_io import from_pil as _from_pil
 import gamera.args
 
 def has_version(*req_version):
-    # TODO: Enable if final Gamera release is available.
-    return True  # tuple(map(int, version.split('.'))) >= req_version
+    return tuple(map(int, version.split('.'))) >= req_version
 
 def load_image(filename):
     pil_image = PIL.open(filename)
