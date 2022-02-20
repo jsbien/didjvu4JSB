@@ -207,20 +207,7 @@ def init():
     if not has_version(4, 0):
         raise RuntimeError('Gamera >= 4.0 is required')
     sys.modules['numpy'] = None
-    result = _init()
-    test_image = Image((0, 0), (5, 5), RGB)
-    test_string = test_image._to_raw_string()
-    try:
-        sys.getrefcount
-    except AttributeError:
-        return result
-    refcount = sys.getrefcount(test_string)
-    if refcount >= 3:  # no coverage
-        # See: https://groups.yahoo.com/neo/groups/gamera-devel/conversations/topics/2068
-        raise RuntimeError('Memory leak in Gamera')
-    else:
-        assert refcount == 2
-    return result
+    return _init()
 
 __all__ = [
     # classes:
