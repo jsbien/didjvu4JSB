@@ -88,13 +88,6 @@ def load_image(filename):
         elif pil_image.mode not in {'RGB', 'L'}:
             pil_image = pil_image.convert('RGB')
         assert pil_image.mode in {'RGB', 'L'}
-        try:
-            # Gamera still uses tostring(), which was deprecated,
-            # and finally removed in Pillow 3.0.0.
-            # https://pillow.readthedocs.io/en/3.0.x/releasenotes/3.0.0.html#deprecated-methods
-            pil_image.tostring = pil_image.tobytes
-        except AttributeError:  # no coverage
-            pass
         image = _from_pil(pil_image)
     image.dpi = dpi
     return image
@@ -227,13 +220,6 @@ def init():
         raise RuntimeError('Memory leak in Gamera')
     else:
         assert refcount == 2
-    try:
-        PIL.fromstring = PIL.frombytes
-        # Gamera still uses fromstring(), which was deprecated,
-        # and finally removed in Pillow 3.0.0.
-        # https://pillow.readthedocs.io/en/3.0.x/releasenotes/3.0.0.html#deprecated-methods
-    except AttributeError:
-        pass
     return result
 
 __all__ = [
