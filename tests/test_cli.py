@@ -285,7 +285,7 @@ class test_argument_parser():
 
     def _test_help(self, action=None):
         argv = ['didjvu', action, '--help']
-        argv = list([_f for _f in argv if _f])
+        argv = [_f for _f in argv if _f]
         stdout = io.StringIO()
         with interim(sys, argv=argv, stdout=stdout):
             ap = cli.ArgumentParser(self.methods, 'djvu')

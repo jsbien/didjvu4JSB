@@ -70,16 +70,16 @@ def assert_rfc3339_timestamp(timestamp):
 
 @contextlib.contextmanager
 def interim(obj, **override):
-    copy = dict(
-        (key, getattr(obj, key))
+    copy = {
+        key: getattr(obj, key)
         for key in override
-    )
-    for key, value in list(override.items()):
+    }
+    for key, value in override.items():
         setattr(obj, key, value)
     try:
         yield
     finally:
-        for key, value in list(copy.items()):
+        for key, value in copy.items():
             setattr(obj, key, value)
 
 
@@ -87,12 +87,12 @@ def interim(obj, **override):
 def interim_environ(**override):
     keys = set(override)
     copy_keys = keys & set(os.environ)
-    copy = dict(
-        (key, value)
-        for key, value in list(os.environ.items())
+    copy = {
+        key: value
+        for key, value in os.environ.items()
         if key in copy_keys
-    )
-    for key, value in list(override.items()):
+    }
+    for key, value in override.items():
         if value is None:
             os.environ.pop(key, None)
         else:

@@ -90,7 +90,7 @@ def _get_method_params_help(methods):
     result = ['binarization methods and their parameters:']
     for name, method in sorted(methods.items()):
         result += ['  ' + name]
-        for arg in list(method.args.values()):
+        for arg in method.args.values():
             arg_help = arg.name
             if arg.type in {int, float}:
                 arg_help += '=' + 'NX'[arg.type is float]
@@ -303,7 +303,7 @@ class ArgumentParser(argparse.ArgumentParser):
             if (arg.max is not None) and pvalue > arg.max:
                 self.error('parameter {0} must be <= {1}'.format(pname, arg.max))
             result[arg.name] = pvalue
-        for arg in list(o.method.args.values()):
+        for arg in o.method.args.values():
             if (not arg.has_default) and (arg.name not in result):
                 self.error('parameter {0} is not set'.format(arg.name))
         return result

@@ -102,7 +102,7 @@ class Argument(object):
 
     def __init__(self, arg):
         self.name = arg.name.replace(' ', '-').replace('_', '-')
-        for gtype, ptype in list(self._type_map.items()):
+        for gtype, ptype in self._type_map.items():
             if isinstance(arg, gtype):
                 self.type = ptype
                 break
@@ -145,11 +145,11 @@ class Plugin(object):
             self.args[arg.name] = arg
 
     def __call__(self, image, **kwargs):
-        kwargs = dict(
-            (key.replace('-', '_'), value)
+        kwargs = {
+            key.replace('-', '_'): value
             for key, value
-            in list(kwargs.items())
-        )
+            in kwargs.items()
+        }
         pixel_types = self._pixel_types
         if image.data.pixel_type not in pixel_types:
             if RGB in pixel_types:
@@ -181,7 +181,7 @@ def _load_methods():
         from gamera.plugins.binarization import shading_subtraction
         from gamera.plugins.binarization import white_rohrer_threshold
     methods = {}
-    for name, plugin in list(vars(_methods).items()):
+    for name, plugin in vars(_methods).items():
         if name.startswith('_'):
             continue
         name = replace_suffix('', name)

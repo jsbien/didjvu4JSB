@@ -130,7 +130,7 @@ def _chunk_order(key):
 class Multichunk(object):
 
     _chunk_names = 'Sjbz Smmr BG44 BGjp BG2k FGbz FG44 FGjp FG2k INCL Djbz'
-    _chunk_names = dict((x.lower(), x) for x in _chunk_names.split())
+    _chunk_names = {x.lower(): x for x in _chunk_names.split()}
     _info_re = re.compile(' ([0-9]+)x([0-9]+),.* ([0-9]+) dpi,').search
 
     def __init__(self, width=None, height=None, dpi=None, **chunks):
@@ -141,8 +141,8 @@ class Multichunk(object):
         self._dirty = set()  # Chunks that need to be re-read from the file.
         self._pristine = False  # Should save() be a no-op?
         self._file = None
-        for (k, v) in list(chunks.items()):
-            self[k] = v
+        for key, value in chunks.items():
+            self[key] = value
 
     def _load_file(self):
         args = ['djvudump', self._file.name]
@@ -165,7 +165,7 @@ class Multichunk(object):
                     raise ValueError
         finally:
             dump.wait()
-        self._chunks = dict((key, None) for key in keys)
+        self._chunks = {key: None for key in keys}
         self._dirty.add(self._chunks)
         self._pristine = True
 
@@ -236,7 +236,7 @@ class Multichunk(object):
             raise ValueError
         args = ['djvumake', None, 'INFO={w},{h},{r}'.format(w=self.width, h=self.height, r=self.dpi)]
         incl_dir = None
-        for key, value in sorted(list(self._chunks.items()), key=_chunk_order):
+        for key, value in sorted(self._chunks.items(), key=_chunk_order):
             try:
                 key = self._chunk_names[key]
             except KeyError:
