@@ -19,7 +19,6 @@ import errno
 import locale
 import os
 import signal
-import stat
 
 from .tools import (
     SkipTest,
@@ -123,16 +122,15 @@ class test_environment():
             assert_equal(stderr, b'')
 
     def test_path(self):
-        path = os.getenv('PATH').split(':')
+        path = os.getenv('PATH')
         with temporary.directory() as tmpdir:
             command_name = temporary.name(dir=tmpdir)
             command_path = os.path.join(tmpdir, command_name)
             with open(command_path, 'wt') as file:
                 print('#!/bin/sh', file=file)
                 print('printf 42', file=file)
-            os.chmod(command_path, stat.S_IRWXU)
-            path[:0] = [tmpdir]
-            path = ':'.join(path)
+            os.chmod(command_path, 0o700)
+            path = str.join(os.pathsep, [tmpdir, path])
             with interim_environ(PATH=path):
                 child = ipc.Subprocess([command_name],
                     stdout=ipc.PIPE, stderr=ipc.PIPE,
