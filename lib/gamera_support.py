@@ -206,8 +206,16 @@ def to_pil_1bpp(image):
 def init():
     if not has_version(4, 0):
         raise RuntimeError('Gamera >= 4.0 is required')
-    sys.modules['numpy'] = None
-    return _init()
+    blocked_numpy = False
+    if 'numpy' not in sys.modules:
+        sys.modules['numpy'] = None
+        blocked_numpy = True
+    try:
+        result = _init()
+    finally:
+        if blocked_numpy:
+            del sys.modules['numpy']
+    return result
 
 __all__ = [
     # classes:
