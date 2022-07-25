@@ -49,9 +49,15 @@ option:
 Installation
 ============
 
-After installing the requirements, run ``make install`` to make the application available globally.
+You can use didjvu without installing it, straight out of unpacked source tarball or a VCS checkout.
 
-For custom installation paths, like inside a local virtual environment, you might want to pass custom values for `PREFIX` or `DESTDIR`. Example: ``make PREFIX=/home/user/path/to/env install``.
+It's also possible to install it system-wide with::
+
+   make install
+
+By default, ``make install`` installs the package to ``/usr/local``. You can specify a different installation prefix by setting the ``PREFIX`` variable, e.g.::
+
+   make install PREFIX="$HOME/.local"
    
 About this fork
 ===============
