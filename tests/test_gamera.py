@@ -52,7 +52,7 @@ class LoadImageTestCase(TestCase):
 
 class MethodsTestCase(TestCase):
     def _test_one_method(self, filename, method, kwargs):
-        method = gamera_support.methods[method]
+        method = gamera_support.METHODS[method]
         path = self.get_data_file(filename)
         gamera_support.init()
         in_image = gamera_support.load_image(path)
@@ -62,7 +62,7 @@ class MethodsTestCase(TestCase):
         self.assertEqual(in_image.dim, bin_image.dim)
 
     def _test_methods(self, filename):
-        for method in gamera_support.methods:
+        for method in gamera_support.METHODS:
             with self.subTest(method=method):
                 kwargs = dict()
                 if method == 'global':

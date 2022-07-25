@@ -267,7 +267,7 @@ class Multichunk:
             return self._file
 
 
-_djvu_header = b'AT&TFORM\0\0\0\0DJVMDIRM\0\0\0\0\1'
+_DJVU_HEADER = b'AT&TFORM\0\0\0\0DJVMDIRM\0\0\0\0\1'
 
 
 def bundle_djvu_via_indirect(*component_filenames):
@@ -284,7 +284,7 @@ def bundle_djvu_via_indirect(*component_filenames):
                 page_size = 0
             page_sizes += [page_size]
         with temporary.file(dir=tmpdir, suffix='djvu') as index_file:
-            index_file.write(_djvu_header)
+            index_file.write(_DJVU_HEADER)
             index_file.write(struct.pack('>H', len(page_ids)))
             index_file.flush()
             bzz = ipc.Subprocess(['bzz', '-e', '-', '-'], stdin=ipc.PIPE, stdout=index_file)
@@ -302,7 +302,7 @@ def bundle_djvu_via_indirect(*component_filenames):
             index_file_size = index_file.tell()
             i = 0
             while True:
-                i = _djvu_header.find(b'\0' * 4, i)
+                i = _DJVU_HEADER.find(b'\0' * 4, i)
                 if i < 0:
                     break
                 index_file.seek(i)
@@ -338,11 +338,11 @@ def require_cli():
     )
 
 
-_page_id_chars = re.compile(r'^[A-Za-z\d_+.-]*$').match
+_PAGE_ID_CHARACTERS = re.compile(r'^[A-Za-z\d_+.-]*$').match
 
 
 def validate_page_id(page_id):
-    if not _page_id_chars(page_id):
+    if not _PAGE_ID_CHARACTERS(page_id):
         raise ValueError('page identifier must consist only of lowercase ASCII letters, digits, _, +, - and dot')
     if page_id[:1] in {'.', '+', '-'}:
         raise ValueError('page identifier cannot start with +, - or a dot')

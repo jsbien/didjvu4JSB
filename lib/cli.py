@@ -254,6 +254,7 @@ class ArgumentParser(argparse.ArgumentParser):
             # noinspection PyUnresolvedReferences
             self.__subparsers
         except AttributeError:
+            # noinspection PyAttributeOutsideInit
             self.__subparsers = self.add_subparsers(parser_class=argparse.ArgumentParser)
 
         kwargs.setdefault('formatter_class', argparse.RawDescriptionHelpFormatter)

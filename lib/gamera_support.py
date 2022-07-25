@@ -201,7 +201,7 @@ def _load_methods():
     return method_mapping
 
 
-methods = _load_methods()
+METHODS = _load_methods()
 
 
 def to_pil_rgb(image):
@@ -246,7 +246,7 @@ __all__ = [
     # functions:
     'init',
     'load_image',
-    'methods',
+    'METHODS',
     'to_pil_1bpp',
     'to_pil_rgb',
 ]

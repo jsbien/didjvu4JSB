@@ -107,8 +107,8 @@ class Subprocess(subprocess.Popen):
             commandline = kwargs['args']
         except KeyError:
             commandline = args[0]
-        if logger.isEnabledFor(logging.DEBUG):
-            logger.debug(shell_escape(commandline))
+        if LOGGER.isEnabledFor(logging.DEBUG):
+            LOGGER.debug(shell_escape(commandline))
         self.__command = commandline[0]
         try:
             # noinspection PyArgumentList
@@ -152,7 +152,7 @@ def require(*commands):
 # logging support
 # ===============
 
-logger = logging.getLogger('didjvu.ipc')
+LOGGER = logging.getLogger('didjvu.ipc')
 
 
 # __all__

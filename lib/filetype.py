@@ -20,7 +20,7 @@ Filetype detection
 
 class Generic:
     def __new__(cls, *args, **kwargs):
-        raise NotImplementedError  # no coverage
+        pass  # no coverage
 
     @classmethod
     def like(cls, other):

@@ -33,11 +33,8 @@ from lib import temporary
 from lib import utils
 from lib import xmp
 
-logger = None
-
 
 def setup_logging():
-    global logger
     logger = logging.getLogger('didjvu.main')
     ipc_logger = logging.getLogger('didjvu.ipc')
     logging.NOSY = (logging.INFO + logging.DEBUG) // 2
@@ -59,6 +56,11 @@ def setup_logging():
     formatter = logging.Formatter('+ %(message)s')
     handler.setFormatter(formatter)
     ipc_logger.addHandler(handler)
+
+    return logger, ipc_logger
+
+
+LOGGER, IPC_LOGGER = setup_logging()
 
 
 def error(message, *args, **kwargs):
@@ -211,7 +213,7 @@ def format_compression_info(bytes_in, bytes_out, bits_per_pixel):
 
 class Main:
     def __init__(self):
-        parser = cli.ArgumentParser(gamera_support.methods, default_method='djvu')
+        parser = cli.ArgumentParser(gamera_support.METHODS, default_method='djvu')
         parser.parse_arguments(actions=self)
 
     def check_common(self, options):
@@ -223,18 +225,14 @@ class Main:
                 len(options.input),
                 len(options.masks)
             )
-        setup_logging()
-        ipc_logger = logging.getLogger('didjvu.ipc')
-        assert logger is not None
         # noinspection PyUnresolvedReferences
         log_level = {
             0: logging.WARNING,
             1: logging.INFO,
             2: logging.NOSY,
         }.get(options.verbosity, logging.DEBUG)
-        # noinspection PyUnresolvedReferences
-        logger.setLevel(log_level)
-        ipc_logger.setLevel(log_level)
+        LOGGER.setLevel(log_level)
+        IPC_LOGGER.setLevel(log_level)
         djvu_support.require_cli()
         gamera_support.init()
 
@@ -289,13 +287,11 @@ class Main:
 
     def encode_one(self, options, image_filename, mask_filename, output, xmp_output):
         bytes_in = os.path.getsize(image_filename)
-        # noinspection PyUnresolvedReferences
-        logger.info(f'{image_filename}:')
+        LOGGER.info(f'{image_filename}:')
         file_type = filetype.check(image_filename)
         if file_type.like(filetype.Djvu):
             if file_type.like(filetype.DjvuSingle):
-                # noinspection PyUnresolvedReferences
-                logger.info('- copying DjVu as is')
+                LOGGER.info('- copying DjVu as is')
                 with open(image_filename, 'rb') as djvu_file:
                     fs.copy_file(djvu_file, output)
             else:
@@ -303,18 +299,16 @@ class Main:
                 #       consists of. If it's only one, continue.
                 error('multi-page DjVu documents are not supported as input files')
             return
-        # noinspection PyUnresolvedReferences
-        logger.info('- reading image')
+        LOGGER.info('- reading image')
         image = gamera_support.load_image(image_filename)
         width, height = image.ncols, image.nrows
         # noinspection PyUnresolvedReferences
-        logger.nosy(f'- image size: {width} x {height}')
+        LOGGER.nosy(f'- image size: {width} x {height}')
         mask = generate_mask(mask_filename, image, options.method, options.parameters)
         n_connected_components = -1
         if xmp_output:
             n_connected_components = len(mask.cc_analysis())
-        # noinspection PyUnresolvedReferences
-        logger.info('- converting to DjVu')
+        LOGGER.info('- converting to DjVu')
         djvu_doc = image_to_djvu(width, height, image, mask, options=options)
         djvu_file = djvu_doc.save()
         try:
@@ -323,11 +317,9 @@ class Main:
             djvu_file.close()
         bits_per_pixel = 8.0 * bytes_out / (width * height)
         compression_info = format_compression_info(bytes_in, bytes_out, bits_per_pixel)
-        # noinspection PyUnresolvedReferences
-        logger.info(f'- {compression_info}')
+        LOGGER.info(f'- {compression_info}')
         if xmp_output:
-            # noinspection PyUnresolvedReferences
-            logger.info('- saving XMP metadata')
+            LOGGER.info('- saving XMP metadata')
             metadata = xmp.metadata()
             metadata.import_(image_filename)
             internal_properties = list(cli.dump_options(options)) + [
@@ -340,24 +332,20 @@ class Main:
             metadata.write(xmp_output)
 
     def separate_one(self, options, image_filename, output):
-        # noinspection PyUnresolvedReferences
-        logger.info(f'{image_filename}:')
+        LOGGER.info(f'{image_filename}:')
         file_type = filetype.check(image_filename)
         if file_type.like(filetype.Djvu):
             # TODO: Figure out how many pages the document consists of.
             #       If it's only one, extract the existing mask.
             error('DjVu documents are not supported as input files')
-        # noinspection PyUnresolvedReferences
-        logger.info('- reading image')
+        LOGGER.info('- reading image')
         image = gamera_support.load_image(image_filename)
         width, height = image.ncols, image.nrows
         # noinspection PyUnresolvedReferences
-        logger.nosy(f'- image size: {width} x {height}')
-        # noinspection PyUnresolvedReferences
-        logger.info('- thresholding')
+        LOGGER.nosy(f'- image size: {width} x {height}')
+        LOGGER.info('- thresholding')
         mask = generate_mask(None, image, options.method, options.parameters)
-        # noinspection PyUnresolvedReferences
-        logger.info('- saving')
+        LOGGER.info('- saving')
         if output is not sys.stdout:
             # A real file
             mask.save_PNG(output.name)
@@ -384,8 +372,7 @@ class Main:
             self.bundle_complex(options)
         [xmp_output] = options.xmp_output
         if xmp_output:
-            # noinspection PyUnresolvedReferences
-            logger.info('saving XMP metadata')
+            LOGGER.info('saving XMP metadata')
             metadata = xmp.metadata()
             internal_properties = list(cli.dump_options(options, multi_page=True))
             metadata.update(
@@ -413,8 +400,7 @@ class Main:
                     error(exception)
                 component_filenames += [os.path.join(tmpdir, page_id)]
             parallel_for(options, self._bundle_simple_page, options.input, options.masks, component_filenames)
-            # noinspection PyUnresolvedReferences
-            logger.info('bundling')
+            LOGGER.info('bundling')
             djvu_file = djvu_support.bundle_djvu(*component_filenames)
             try:
                 bytes_out = fs.copy_file(djvu_file, output)
@@ -423,26 +409,23 @@ class Main:
         bits_per_pixel = float('nan')  # FIXME!
         compression_info = format_compression_info(bytes_in, bytes_out, bits_per_pixel)
         # noinspection PyUnresolvedReferences
-        logger.nosy(compression_info)
+        LOGGER.nosy(compression_info)
 
     def _bundle_complex_page(self, options, page, minidjvu_in_dir, image_filename, mask_filename, pixels):
-        # noinspection PyUnresolvedReferences
-        logger.info(f'{image_filename}:')
+        LOGGER.info(f'{image_filename}:')
         file_type = filetype.check(image_filename)
         if file_type.like(filetype.Djvu):
             # TODO: Allow merging existing documents (even multi-page ones).
             error('DjVu documents are not supported as input files')
-        # noinspection PyUnresolvedReferences
-        logger.info('- reading image')
+        LOGGER.info('- reading image')
         image = gamera_support.load_image(image_filename)
         dpi = image_dpi(image, options)
         width, height = image.ncols, image.nrows
         pixels[0] += width * height
         # noinspection PyUnresolvedReferences
-        logger.nosy(f'- image size: {width} x {height}')
+        LOGGER.nosy(f'- image size: {width} x {height}')
         mask = generate_mask(mask_filename, image, options.method, options.parameters)
-        # noinspection PyUnresolvedReferences
-        logger.info('- converting to DjVu')
+        LOGGER.info('- converting to DjVu')
         page.djvu = image_to_djvu(width, height, image, mask, options=options)
         del image, mask
         page.sjbz = djvu_support.Multichunk(width, height, dpi, sjbz=page.djvu['sjbz'])
@@ -477,8 +460,7 @@ class Main:
             )
             [pixels] = pixels
             with temporary.directory() as minidjvu_out_dir:
-                # noinspection PyUnresolvedReferences
-                logger.info('creating shared dictionaries')
+                LOGGER.info('creating shared dictionaries')
 
                 def chdir():
                     os.chdir(minidjvu_out_dir)
@@ -511,8 +493,7 @@ class Main:
                     page.djvu_symlink = os.path.join(minidjvu_out_dir, page.page_id)
                     os.unlink(page.djvu_symlink)
                     os.symlink(page.djvu.name, page.djvu_symlink)
-                # noinspection PyUnresolvedReferences
-                logger.info('bundling')
+                LOGGER.info('bundling')
                 djvu_file = djvu_support.bundle_djvu(*component_filenames)
                 try:
                     bytes_out = fs.copy_file(djvu_file, output)
@@ -521,7 +502,7 @@ class Main:
         bits_per_pixel = 8.0 * bytes_out / pixels
         compression_info = format_compression_info(bytes_in, bytes_out, bits_per_pixel)
         # noinspection PyUnresolvedReferences
-        logger.nosy(compression_info)
+        LOGGER.nosy(compression_info)
 
 
 __all__ = ['Main']
