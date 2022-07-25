@@ -75,20 +75,20 @@ def load_image(filename):
         if pil_image.format == 'TIFF':
             # Gamera handles only a few TIFF color modes correctly.
             # https://bugs.debian.org/784374
-            gamera_modes = ['1', 'I;16', 'L', 'RGB']
+            gamera_modes = {'1', 'I;16', 'L', 'RGB'}
         elif pil_image.format == 'PNG':
             # Gamera doesn't handle 16-bit greyscale PNG images correctly.
             # https://groups.yahoo.com/neo/groups/gamera-devel/conversations/messages/2425
-            gamera_modes = ['1', 'L', 'RGB']
+            gamera_modes = {'1', 'L', 'RGB'}
         else:
-            gamera_modes = []
+            gamera_modes = set()
         if pil_image.mode not in gamera_modes:
             raise IOError
-        # Gamera supports more TIFF compression formats that PILImage.
+        # Gamera supports more TIFF compression formats than PIL.
         # https://mail.python.org/pipermail/image-sig/2003-July/002354.html
         image = _load_image(filename)
     except IOError:
-        # Gamera supports importing only 8-bit and RGB from PILImage:
+        # Gamera supports importing only 8-bit and RGB from PIL:
         if pil_image.mode[:2] in {'1', '1;', 'I', 'I;', 'L;'}:
             pil_image = pil_image.convert('L')
         elif pil_image.mode not in {'RGB', 'L'}:
@@ -96,8 +96,8 @@ def load_image(filename):
         assert pil_image.mode in {'RGB', 'L'}
         # noinspection PyArgumentList
         image = _from_pil(pil_image)
-    image.dpi = dpi
     pil_image.close()
+    image.dpi = dpi
     return image
 
 
