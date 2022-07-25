@@ -17,7 +17,7 @@ import glob
 import os
 import re
 
-from tests.tools import TestCase
+from tests.tools import silence_truncated_file_read_warnings, TestCase
 
 from PIL import Image
 
@@ -47,7 +47,11 @@ class LoadImageTestCase(TestCase):
             ))
         for path in paths:
             with self.subTest(basename=path):
-                self._test_load_image(path)
+                if path == 'ycbcr-jpeg.tiff':
+                    with silence_truncated_file_read_warnings():
+                        self._test_load_image(path)
+                else:
+                    self._test_load_image(path)
 
 
 class MethodsTestCase(TestCase):
@@ -70,7 +74,8 @@ class MethodsTestCase(TestCase):
                 self._test_one_method(filename=filename, method=method, kwargs=kwargs)
 
     def test_color(self):
-        self._test_methods('ycbcr-jpeg.tiff')
+        with silence_truncated_file_read_warnings():
+            self._test_methods('ycbcr-jpeg.tiff')
 
     def test_grey(self):
         self._test_methods('greyscale-packbits.tiff')
@@ -79,6 +84,8 @@ class MethodsTestCase(TestCase):
 class ToPilRgbTestCase(TestCase):
     def _test(self, filename):
         path = self.get_data_file(filename)
+        import os
+        self.assertTrue(os.path.exists(path))
         in_image = Image.open(path)
         self.addCleanup(in_image.close)
         if in_image.mode != 'RGB':
@@ -90,7 +97,8 @@ class ToPilRgbTestCase(TestCase):
         self.assert_images_equal(in_image, out_image)
 
     def test_color(self):
-        self._test('ycbcr-jpeg.tiff')
+        with silence_truncated_file_read_warnings():
+            self._test('ycbcr-jpeg.tiff')
 
     def test_grey(self):
         self._test('greyscale-packbits.tiff')

@@ -17,7 +17,7 @@ import io
 import os
 import shutil
 
-from tests.tools import mock, TestCase
+from tests.tools import mock, silence_truncated_file_read_warnings, TestCase
 
 from PIL import Image
 
@@ -66,8 +66,9 @@ class BitonalToDjvuTestCase(TestCase):
 class PhotoToDjvuTestCase(TestCase):
     def test_photo_to_djvu(self):
         path = self.get_data_file('ycbcr-jpeg.tiff')
-        in_image = Image.open(path)
-        in_image = in_image.convert('RGB')
+        with silence_truncated_file_read_warnings():
+            in_image = Image.open(path)
+            in_image = in_image.convert('RGB')
         mask_image = in_image.convert('1')
         djvu_file = djvu.photo_to_djvu(in_image, mask_image=mask_image)
         out_image = ddjvu(djvu_file, fmt='ppm')

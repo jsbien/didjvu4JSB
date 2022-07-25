@@ -77,11 +77,22 @@ def interim_environ(**override):
         os.environ.update(copy)
 
 
+@contextlib.contextmanager
+def silence_truncated_file_read_warnings():
+    import warnings
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            action='ignore', category=UserWarning, message=r'^Truncated File Read$'
+        )
+        yield
+
+
 __all__ = [
     'mock',
     'TestCase',
     'SkipTest',
     'interim_environ',
+    'silence_truncated_file_read_warnings',
 ]
 
 # vim:ts=4 sts=4 sw=4 et
