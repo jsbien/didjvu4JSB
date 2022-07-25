@@ -245,7 +245,7 @@ didjvu (0.2.1) unstable; urgency=low
 
 didjvu (0.2) unstable; urgency=low
 
-  * Python ≥ 2.6 in now required.
+  * Python ≥ 2.6 is now required.
   * Implement a new command-line interface. Three subcommands are available:
     + separate — generate masks for images;
     + encode — convert images to single-page DjVu documents;

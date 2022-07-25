@@ -45,13 +45,20 @@ option:
    https://launchpad.net/py3exiv2
 .. _Gamera-4:
    https://github.com/hsnr-gamera/gamera-4
+
+Installation
+============
+
+After installing the requirements, run ``make install`` to make the application available globally.
+
+For custom installation paths, like inside a local virtual environment, you might want to pass custom values for `PREFIX` or `DESTDIR`. Example: ``make PREFIX=/home/user/path/to/env install``.
    
 About this fork
 ===============
 
 This repository is a port of the original repository to Python 3.
 
-The process involved the *2to3* tool and manual fixes afterwards to get the existing tests to pass. Some of the error reports and fixes araising from the early porting process have been contributed by `@rmast`_.
+The process involved the *2to3* tool and manual fixes afterwards to get the existing tests to pass. Some of the error reports and fixes arising from the early porting process have been contributed by `@rmast`_.
 
 At the moment there are no plans to submit a pull request to the upstream repository, which would probably require some changes to my code as well. This is mostly due to the corresponding upstream issue being marked as *wontfix*: `Issue #13`_.
 
