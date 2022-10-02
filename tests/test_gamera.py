@@ -84,7 +84,6 @@ class MethodsTestCase(TestCase):
 class ToPilRgbTestCase(TestCase):
     def _test(self, filename):
         path = self.get_data_file(filename)
-        import os
         self.assertTrue(os.path.exists(path))
         in_image = Image.open(path)
         self.addCleanup(in_image.close)
