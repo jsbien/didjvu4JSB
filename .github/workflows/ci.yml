@@ -117,8 +117,8 @@ jobs:
     # This means that for Ubuntu 20.04 each Python version different from 3.8 fails with something like
     # `cannot find -lboost_python39` when installing Boost.Python through the system package manager.
     # Based upon:
-    #    * https://www.boost.org/doc/libs/1_78_0/libs/python/doc/html/building/installing_boost_python_on_your_.html
-    #    * https://www.boost.org/doc/libs/1_78_0/more/getting_started/unix-variants.html
+    #    * https://www.boost.org/doc/libs/release/libs/python/doc/html/building/installing_boost_python_on_your_.html
+    #    * https://www.boost.org/doc/libs/release/more/getting_started/unix-variants.html
     - name: install Boost.Python
       run: |
         mkdir deps
