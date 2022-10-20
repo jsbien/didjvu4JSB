@@ -32,9 +32,9 @@ option:
 .. _Pillow:
    https://pypi.org/project/Pillow/
 .. _DjVuLibre:
-   http://djvu.sourceforge.net/
+   https://djvu.sourceforge.net/
 .. _minidjvu:
-   http://minidjvu.sourceforge.net/
+   https://minidjvu.sourceforge.net/
 .. _GExiv2:
    https://wiki.gnome.org/Projects/gexiv2
 .. _PyGI:
