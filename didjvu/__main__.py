@@ -4,7 +4,7 @@
 
 def main(prog=None):
     from didjvu.didjvu import Main
-    return Main(prog=prog)
+    Main(prog=prog)
 
 
 if __name__ == '__main__':
