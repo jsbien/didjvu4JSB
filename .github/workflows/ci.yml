@@ -14,19 +14,22 @@ jobs:
     strategy:
       matrix:
         include:
-        - os: ubuntu-latest
-          python: 3.8
-          cc: gcc
+        - python: 3.8
           gamera: v4.0.0
-        - os: ubuntu-latest
-          python: 3.9
-          cc: gcc
+        - python: 3.9
           gamera: v4.0.0
-        - os: ubuntu-latest
-          python: '3.10'
-          cc: gcc
+        - python: '3.10'
           gamera: v4.0.0
-    runs-on: ${{ matrix.os }}
+        - python: 3.8
+          gamera: master
+        - python: 3.9
+          gamera: master
+        - python: '3.10'
+          gamera: master
+        # Not working for now: https://github.com/hsnr-gamera/gamera-4/issues/54
+        # - python: '3.11'
+        #   gamera: master
+    runs-on: ubuntu-latest
     name: Python ${{ matrix.python }} with Gamera ${{ matrix.gamera }}
     steps:
     - uses: actions/checkout@v3
@@ -53,30 +56,27 @@ jobs:
           xsltproc
     - name: set up CC and CXX env variables
       run: |
-        echo "cc=${CC}" >> $GITHUB_ENV
-        echo "cxx=${CC/cc/++}" >> $GITHUB_ENV
-      env:
-        CC: ${{ matrix.cc || 'gcc' }}
+        echo "cc=gcc" >> $GITHUB_ENV
+        echo "cxx=g++" >> $GITHUB_ENV
     - name: apt install GCC
       run:
         sudo apt-get install ${{ env.cc }} ${{ env.cxx }}
-      if: ${{ matrix.cc }}
     - name: install ccache
       run: |
         sudo apt-get install ccache
         echo "/usr/lib/ccache:$PATH" >> $GITHUB_PATH
     - name: check ccache setup
       run: |
-        command -v ${{env.cc}} | grep /ccache/
-        command -v ${{env.cxx}} | grep /ccache/
+        command -v ${{ env.cc }} | grep /ccache/
+        command -v ${{ env.cxx }} | grep /ccache/
     - name: restore ccache data
       uses: actions/cache@v3
       with:
         path: ~/.ccache
         key:
-          ccache-${{ matrix.os }}-${{ env.cc }}-${{ matrix.gamera }}-py${{ matrix.python }}
+          ccache-ubuntu-latest-${{ env.cc }}-${{ matrix.gamera }}-py${{ matrix.python }}
         restore-keys:
-          ccache-${{ matrix.os }}-${{ env.cc }}-${{ matrix.gamera }}-py${{ matrix.python }}
+          ccache-ubuntu-latest-${{ env.cc }}-${{ matrix.gamera }}-py${{ matrix.python }}
       if: ${{ matrix.gamera != 'master' }}
     - name: update PIP
       run:
@@ -98,8 +98,8 @@ jobs:
         cd deps/gamera-*/
         python setup.py --nowx build
       env:
-        CC: ${{env.cc}}
-        CXX: ${{env.cxx}}
+        CC: ${{ env.cc }}
+        CXX: ${{ env.cxx }}
     - name: install Gamera
       run: |
         cd deps/gamera-*/
