@@ -34,11 +34,11 @@ check: check-changelog check-rst check-xml
 
 .PHONY: check-changelog
 check-changelog: changelog
-	dpkg-parsechangelog -l$(<) --all 2>&1 >/dev/null | { ! grep .; }
+	dpkg-parsechangelog -l$(<) --all 2>&1 > /dev/null | { ! grep .; }
 
 .PHONY: check-rst
 check-rst:
-	grep -rwl 'ft[=]rst' | xargs -t -I{} $(rst2xml) {} /dev/null
+	grep -rwl 'ft[=]rst' | xargs -t -I{} $(rst2xml) {} > /dev/null
 
 .PHONY: check-xml
 check-xml: manpage.xml
