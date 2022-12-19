@@ -27,16 +27,14 @@ install_manpage: didjvu
 	install -d $(DESTDIR)$(mandir)/man1
 	install -m644 doc/$(<).1 $(DESTDIR)$(mandir)/man1/
 
-# TODO: Remove ignore part if https://github.com/vext-python/vext/issues/87 is fixed.
 .PHONY: test
 test:
-	$(PYTHON) -W ignore:ResourceWarning -m unittest discover --start-directory tests/
+	$(PYTHON) -m unittest discover --start-directory tests/
 
-# TODO: Remove ignore part if https://github.com/vext-python/vext/issues/87 is fixed.
 .PHONY: update-coverage
 update-coverage:
 	coverage erase
-	$(PYTHON) -W ignore:ResourceWarning -m coverage run -m unittest discover --start-directory tests/
+	$(PYTHON) -m coverage run -m unittest discover --start-directory tests/
 	coverage report --include=didjvu/*
 
 .PHONY: clean
