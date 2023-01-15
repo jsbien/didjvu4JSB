@@ -6,5 +6,5 @@ PS4='$ '
 set -x
 dch -m -v "$version" -u low -c doc/changelog
 export version date
-perl -pi -e 's/^__version__ = \047\K[\w.]+/$ENV{version}/' lib/version.py
+perl -pi -e 's/^__version__ = \047\K[\w.]+/$ENV{version}/' didjvu/version.py
 perl -pi -e 's/<!ENTITY version \047\K[\w.]+/$ENV{version}/; s/<date>\K[0-9-]+/$ENV{date}/' doc/*.xml
