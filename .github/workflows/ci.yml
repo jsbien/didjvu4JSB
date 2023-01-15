@@ -15,20 +15,19 @@ jobs:
       matrix:
         include:
         - python: 3.8
-          gamera: v4.0.0
+          gamera: v4.0.1
         - python: 3.9
-          gamera: v4.0.0
+          gamera: v4.0.1
         - python: '3.10'
-          gamera: v4.0.0
+          gamera: v4.0.1
         - python: 3.8
           gamera: master
         - python: 3.9
           gamera: master
         - python: '3.10'
           gamera: master
-        # Not working for now: https://github.com/hsnr-gamera/gamera-4/issues/54
-        # - python: '3.11'
-        #   gamera: master
+        - python: '3.11'
+          gamera: master
     runs-on: ubuntu-latest
     name: Python ${{ matrix.python }} with Gamera ${{ matrix.gamera }}
     steps:
@@ -100,10 +99,20 @@ jobs:
       env:
         CC: ${{ env.cc }}
         CXX: ${{ env.cxx }}
+      if: ${{ matrix.gamera != 'master' }}
     - name: install Gamera
       run: |
         cd deps/gamera-*/
         python setup.py --nowx install
+      if: ${{ matrix.gamera != 'master' }}
+    - name: build and install Gamera
+      run: |
+        cd deps/gamera-*/
+        python -m pip install --verbose .
+      env:
+        CC: ${{ env.cc }}
+        CXX: ${{ env.cxx }}
+      if: ${{ matrix.gamera == 'master' }}
     - name: remove Gamera source
       run:
         rm -rf deps

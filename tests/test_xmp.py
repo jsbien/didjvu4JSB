@@ -31,7 +31,7 @@ del logging
 
 
 def import_backend(name):
-    mod_name = f'lib.xmp.{name}_backend'
+    mod_name = f'didjvu.xmp.{name}_backend'
     try:
         backend = importlib.import_module(mod_name)
     except ImportError as _import_error:

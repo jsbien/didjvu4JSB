@@ -29,7 +29,7 @@ install_manpage: didjvu
 
 .PHONY: test
 test:
-	$(PYTHON) -m unittest discover --start-directory tests/
+	$(PYTHON) -m unittest discover --verbose --start-directory tests/
 
 .PHONY: update-coverage
 update-coverage:
