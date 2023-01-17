@@ -213,8 +213,18 @@ def format_compression_info(bytes_in, bytes_out, bits_per_pixel):
 
 class Main:
     def __init__(self, prog=None):
+        self._opened_files = []
         parser = cli.ArgumentParser(gamera_support.METHODS, default_method='djvu', prog=prog)
         parser.parse_arguments(actions=self)
+    
+    def __del__(self):
+        for fd in self._opened_files:
+            if not fd:
+                continue
+            try:
+                fd.close()
+            except Exception:
+                pass
 
     def check_common(self, options):
         if len(options.masks) == 0:
@@ -267,6 +277,8 @@ class Main:
             open(file_or_path, 'wb') if isinstance(file_or_path, str) else file_or_path
             for file_or_path in options.xmp_output
         )
+        self._opened_files.extend(options.output)
+        self._opened_files.extend(options.xmp_output)
 
     def check_single_output(self, options):
         self.check_common(options)
@@ -279,6 +291,8 @@ class Main:
             # noinspection PyTypeChecker
             options.output = [open(filename, 'wb')]
             options.xmp_output = [open(f'{filename}.xmp', 'wb')] if options.xmp else [None]
+            self._opened_files.extend(options.output)
+            self._opened_files.extend(options.xmp_output)
         assert len(options.output) == len(options.xmp_output) == 1
 
     def encode(self, options):
