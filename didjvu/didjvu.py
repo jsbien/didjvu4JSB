@@ -216,7 +216,7 @@ class Main:
         self._opened_files = []
         parser = cli.ArgumentParser(gamera_support.METHODS, default_method='djvu', prog=prog)
         parser.parse_arguments(actions=self)
-    
+
     def __del__(self):
         for fd in self._opened_files:
             if not fd:
