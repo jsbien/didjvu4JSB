@@ -15,11 +15,11 @@ jobs:
       matrix:
         include:
         - python: 3.8
-          gamera: v4.0.1
+          gamera: v4.1.0
         - python: 3.9
-          gamera: v4.0.1
+          gamera: v4.1.0
         - python: '3.10'
-          gamera: v4.0.1
+          gamera: v4.1.0
         - python: 3.8
           gamera: master
         - python: 3.9
@@ -92,19 +92,6 @@ jobs:
       run: |
         cd deps/
         tar -xzf gamera-*.tar.gz
-    - name: build Gamera
-      run: |
-        cd deps/gamera-*/
-        python setup.py --nowx build
-      env:
-        CC: ${{ env.cc }}
-        CXX: ${{ env.cxx }}
-      if: ${{ matrix.gamera != 'master' }}
-    - name: install Gamera
-      run: |
-        cd deps/gamera-*/
-        python setup.py --nowx install
-      if: ${{ matrix.gamera != 'master' }}
     - name: build and install Gamera
       run: |
         cd deps/gamera-*/
@@ -112,7 +99,6 @@ jobs:
       env:
         CC: ${{ env.cc }}
         CXX: ${{ env.cxx }}
-      if: ${{ matrix.gamera == 'master' }}
     - name: remove Gamera source
       run:
         rm -rf deps
