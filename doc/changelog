@@ -1,4 +1,16 @@
-didjvu (0.9.1) UNRELEASED; urgency=low
+didjvu (0.10) unstable; urgency=low
+
+  * Port to Python 3. At least Python 3.6 is required now.
+  * Migrate tests from `nose` to plain `unittest` stdlib module.
+  * Conform to PEP8 coding style.
+  * Use standardized `setup.py`-based approach.
+  * Clean-up directory structure to not use generic `lib`.
+  * Fix memory leaks occuring in tests.
+  * Drop support for GExiv2 < 0.12.2.
+
+ -- FriedrichFroebel <>  Tue, 07 Mar 2023 20:29:51 +0100
+
+didjvu (0.9.1) unstable; urgency=low
 
   * Fix -p/--pages-per-dict in lossless mode.
     Thanks to Stephen Jones and @rmast for the bug reports.
