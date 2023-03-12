@@ -49,9 +49,13 @@ option:
 Installation
 ============
 
-You can use didjvu without installing it, straight out of unpacked source tarball or a VCS checkout.
+The easiest way to install didjvu is from PyPI::
 
-It's also possible to install it system-wide with::
+    pip install didjvu
+
+Alternatively, you can use didjvu without installing it, straight out of an unpacked source tarball or a VCS checkout.
+
+It's also possible to install it from source for the current interpreter with::
 
    pip install .
 
