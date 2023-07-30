@@ -24,7 +24,8 @@ import datetime
 class Timestamp:
     def __init__(self, unix_time):
         self._localtime = time.localtime(unix_time)
-        self._timezone_delta = datetime.datetime.fromtimestamp(unix_time) - datetime.datetime.utcfromtimestamp(unix_time)
+        datetime_current_timezone = datetime.datetime.fromtimestamp(unix_time).astimezone()
+        self._timezone_delta = datetime_current_timezone.utcoffset()
 
     def _str(self):
         return time.strftime('%Y-%m-%dT%H:%M:%S', self._localtime)
