@@ -269,14 +269,14 @@ class Main:
             else:
                 error('cannot output multiple files to a single file')
         assert len(options.masks) == len(options.output) == len(options.input)
-        options.output = (
+        options.output = [
             open(file_or_path, 'wb') if isinstance(file_or_path, str) else file_or_path
             for file_or_path in options.output
-        )
-        options.xmp_output = (
+        ]
+        options.xmp_output = [
             open(file_or_path, 'wb') if isinstance(file_or_path, str) else file_or_path
             for file_or_path in options.xmp_output
-        )
+        ]
         self._opened_files.extend(options.output)
         self._opened_files.extend(options.xmp_output)
 
