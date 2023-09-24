@@ -1,3 +1,10 @@
+didjvu (0.10.1) unstable; urgency=low
+
+  * Add support for Python 3.12.
+  * Fix broken `encode` and `separate` options.
+
+ -- FriedrichFroebel <>  Sun, 24 Sep 2023 19:35:45 +0200
+
 didjvu (0.10) unstable; urgency=low
 
   * Port to Python 3. At least Python 3.6 is required now.

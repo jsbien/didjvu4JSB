@@ -20,7 +20,7 @@ didjvu version information
 import argparse
 import sys
 
-__version__ = '0.10'
+__version__ = '0.10.1'
 
 
 def get_software_agent():
