@@ -150,9 +150,13 @@ class ArgumentParser(argparse.ArgumentParser):
                     help=f'naming scheme for page identifiers (default: "{default.page_id_template}")'
                 )
             else:
+                if parser is parser_separate:
+                    template = 'sep.{base-ext}.png'
+                else:
+                    template = default.page_id_template
                 parser.add_argument(
                     '--output-template', metavar='TEMPLATE',
-                    help=f'naming scheme for output file (e.g. "{default.page_id_template}")'
+                    help=f'naming scheme for output files (e.g. "{template}")'
                 )
 
             parser.add_argument('--losslevel', dest='loss_level', type=LOSS_LEVEL_TYPE, help=argparse.SUPPRESS)

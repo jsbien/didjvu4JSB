@@ -56,7 +56,7 @@ def gen_uuid():
     """
     Generate a UUID URN, in accordance with RFC 4122.
     """
-    # https://tools.ietf.org/html/rfc4122#section-3
+    # https://www.rfc-editor.org/rfc/rfc4122.html#section-3
     return f'urn:uuid:{uuid.uuid4()}'
 
 
