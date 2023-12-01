@@ -81,7 +81,66 @@ The man pages can be deployed using::
 By default, ``make install_manpage`` installs them to ``/usr/local/``. You can specify a different installation prefix by setting the ``PREFIX`` variable, e.g.::
 
    make install PREFIX="$HOME/.local"
-   
+
+Installation (Friedrich Froebel's answers to Janusz S. Bień)
+----------------------------------
+
+Cf.
+
+https://github.com/FriedrichFroebel/didjvu/discussions/22
+
+For now, Gamera has to be installed manually, due to the package on PyPI being outdated and only providing a Windows binary (see hsnr-gamera/gamera-4#65 where we try to improve this). For installing it, just follow the manual steps:
+
+    git clone git@github.com:hsnr-gamera/gamera-4.git
+    cd gamera-4
+    python -m pip install . --verbose
+
+Usually, you want to do everything in a virtual environment:
+
+    Create it: python3 -m virtualenv venv
+    Enter it: source venv/bin/activate
+    Use as the global environment, for example installing packages etc.
+    To exit it: deactivate
+
+venv is the stdlib module, virtualenv an alternative with more features: https://stackoverflow.com/questions/41573587/what-is-the-difference-between-venv-pyvenv-pyenv-virtualenv-virtualenvwrappe
+
+
+[ For python3 -m virtualenv venv I've got /usr/bin/python3: No module named virtualenv...]
+
+Depending on your setup, you will have to install the corresponding OS or global Python package: https://packages.debian.org/bookworm/python3-virtualenv https://pypi.org/project/virtualenv/
+
+
+Debugging with Thonny (Friedrich Froebel's answers to Janusz S. Bień)
+---------------------
+
+https://github.com/FriedrichFroebel/didjvu/discussions/23
+
+[I had the virtual environment associated with Thonny and used it succesfully, but the association somehow vanished. I re-associated the environment following thonny/thonny#3014.]
+
+https://github.com/FriedrichFroebel/didjvu/discussions/24
+
+The actual entry point is in didjvu/__main__.py - the installed bin/didjvu just points to the didjvu.__main__.main function. Nevertheless, you have to make sure that your sys.path is set correctly, as otherwise __main__.py might fail to run. Thus I would recommend to either go with the bin/didjvu file or with a custom didjvu.py file in the root directory of the repository:
+
+from didjvu.__main__ import main
+
+main()
+
+from didjvu.didjvu import Main imports the internal main entry point
+
+didjvu/didjvu/didjvu.py
+
+Line 214 in 5adbf8b
+ class Main: 
+whose __init__ method starts the argument parsing and in
+
+didjvu/didjvu/cli.py
+
+Line 340 in 5adbf8b
+ return action(options) 
+calls the actual action (bundle, separate or encode).
+
+In didjvu.didjvu import Main, the first didjvu is the outer package (which you can install using pip for example and corresponding to the didjvu directory). The second didjvu is the didjvu.py file in this directory, Main is the object to import, in this case the Main class.
+
 About this fork (by Friedrich Froebel)
 ======================================
 
