@@ -1,3 +1,4 @@
+
 Overview
 ========
 
@@ -6,7 +7,7 @@ layers, which can be then encoded into a DjVu_ file.
 
 Originally written by Jakub Wilk, ported to Python3 by  Friedrich Froebel.
 
-The intention of this fork is to make changes necessary to allow east debugging with Thonny_/
+The intention of this fork is to make changes necessary to allow easy debugging with Thonny_/
 
 .. _Gamera:
    https://gamera.informatik.hsnr.de/
