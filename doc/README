@@ -4,10 +4,16 @@ Overview
 **didjvu** uses the Gamera_ framework to separate foreground/background
 layers, which can be then encoded into a DjVu_ file.
 
+Originally written by Jakub Wilk, ported to Python3 by  Friedrich Froebel.
+
+The intention of this fork is to make changes necessary to allow east debugging with Thonny_/
+
 .. _Gamera:
    https://gamera.informatik.hsnr.de/
 .. _DjVu:
    http://djvu.org/
+.. +Thonny:
+   https://thonny.org/
 
 Prerequisites
 =============
@@ -51,8 +57,8 @@ option:
 .. _Gamera-4:
    https://github.com/hsnr-gamera/gamera-4
 
-Installation
-============
+Installation (by Friedrich Froebel)
+===================================
 
 The easiest way to install didjvu is from PyPI::
 
@@ -72,8 +78,8 @@ By default, ``make install_manpage`` installs them to ``/usr/local/``. You can s
 
    make install PREFIX="$HOME/.local"
    
-About this fork
-===============
+About this fork (by Friedrich Froebel)
+======================================
 
 This repository is a port of the original repository to Python 3.
 
@@ -83,8 +89,8 @@ At the moment there are no plans to submit a pull request to the upstream reposi
 
 I will try to keep this fork/port in sync with the upstream changes where necessary. Please note that I do not have any plans on implementing completely new features for now. Feature requests and bugs which can be reproduced in the original version as well should be reported at both places in the best case.
 
-Differences from upstream
--------------------------
+Differences from upstream (by Friedrich Froebel)
+------------------------------------------------
 
 * Package requires Python ≥ 3.6.
 * Drop old Gamera workarounds.
